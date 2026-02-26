@@ -8,8 +8,19 @@ function getApiBaseUrl(): string {
     return import.meta.env.VITE_API_BASE_URL;
   }
   
-  // In production (Vercel), use relative API path
-  if (import.meta.env.PROD || import.meta.env.VITE_VERCEL_URL) {
+  // Check if running on Vercel (production)
+  if (import.meta.env.VITE_VERCEL_URL || import.meta.env.VERCEL_URL) {
+    return '/api';
+  }
+  
+  // Check if hostname is not localhost (production)
+  const hostname = window?.location?.hostname;
+  if (hostname && hostname !== 'localhost' && hostname !== '127.0.0.1') {
+    return '/api';
+  }
+  
+  // Check for production mode
+  if (import.meta.env.MODE === 'production') {
     return '/api';
   }
   
