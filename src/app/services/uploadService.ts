@@ -1,4 +1,20 @@
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:4000/api';
+// Auto-detect API URL based on environment
+function getApiBaseUrl(): string {
+  // Check for explicit env variable
+  if (import.meta.env.VITE_API_BASE_URL) {
+    return import.meta.env.VITE_API_BASE_URL;
+  }
+  
+  // In production (Vercel), use relative API path
+  if (import.meta.env.PROD || import.meta.env.VITE_VERCEL_URL) {
+    return '/api';
+  }
+  
+  // Default to local development
+  return 'http://localhost:4000/api';
+}
+
+const API_BASE_URL = getApiBaseUrl();
 
 /**
  * Upload image file to server

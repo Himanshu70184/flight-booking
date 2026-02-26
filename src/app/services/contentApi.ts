@@ -1,15 +1,23 @@
 import { DEFAULT_CMS_CONTENT } from '../data/defaultCmsContent';
 import { ApiResponse, CmsBlog, CmsFaq, CmsTestimonial, PublicCmsContent } from '../types/cms';
 
-interface LocalImportMetaEnv {
-  VITE_API_BASE_URL?: string;
+// Auto-detect API URL based on environment
+function getApiBaseUrl(): string {
+  // Check for explicit env variable
+  if (import.meta.env.VITE_API_BASE_URL) {
+    return import.meta.env.VITE_API_BASE_URL;
+  }
+  
+  // In production (Vercel), use relative API path
+  if (import.meta.env.PROD || import.meta.env.VITE_VERCEL_URL) {
+    return '/api';
+  }
+  
+  // Default to local development
+  return 'http://localhost:4000/api';
 }
 
-interface LocalImportMeta {
-  env: LocalImportMetaEnv;
-}
-
-const API_BASE_URL = ((import.meta as unknown as LocalImportMeta).env.VITE_API_BASE_URL || 'http://localhost:4000/api');
+const API_BASE_URL = getApiBaseUrl();
 const ADMIN_TOKEN_KEY = 'cms_admin_token';
 
 async function parseResponse<T>(response: Response): Promise<T> {
