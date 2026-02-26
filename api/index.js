@@ -4,6 +4,15 @@ import { Blog, Testimonial, Faq, SiteSetting, AdminUser } from './models/index.j
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
+// Parse body for POST/PUT requests
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: '10mb',
+    },
+  },
+};
+
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
 
 // Helper: Authenticate admin
