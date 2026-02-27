@@ -15,6 +15,27 @@ export const config = {
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
 
+// ==================== CORS CONFIGURATION ====================
+const ALLOWED_ORIGINS = (process.env.CORS_ORIGIN || 'http://localhost:5173').split(',').map(o => o.trim());
+
+function setCorsHeaders(res, origin) {
+  // Check if origin is allowed
+  const isAllowed = ALLOWED_ORIGINS.some(allowed => 
+    allowed === '*' || allowed === origin || origin?.includes(allowed)
+  );
+
+  if (isAllowed || !origin) {
+    res.setHeader('Access-Control-Allow-Origin', origin || ALLOWED_ORIGINS[0]);
+  }
+  
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, Accept');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Max-Age', '3600');
+}
+
+// ==================== HELPER FUNCTIONS ====================
+
 // Helper: Authenticate admin
 async function authenticateAdmin(req) {
   const authHeader = req.headers.authorization;
@@ -40,16 +61,25 @@ function handleError(res, error) {
   });
 }
 
-// ==================== PUBLIC ENDPOINTS ====================
+// ==================== MAIN HANDLER ====================
 
-// GET /api/public/content - Get all public CMS content
 export default async function handler(req, res) {
   const { url, method } = req;
-  
+  const origin = req.headers.origin;
+
+  // Set CORS headers for all requests
+  setCorsHeaders(res, origin);
+
+  // Handle preflight requests
+  if (method === 'OPTIONS') {
+    return res.status(200).end();
+  }
   try {
     await connectToDatabase();
     
-    // Route: /api/public/content
+    // ==================== PUBLIC ENDPOINTS ====================
+    
+    // GET /api/public/content - Get all public CMS content
     if (url === '/api/public/content' && method === 'GET') {
       const [blogs, testimonials, faqs, settings] = await Promise.all([
         Blog.find({ isPublished: true }).sort({ createdAt: -1 }).limit(10),
