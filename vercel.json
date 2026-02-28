@@ -19,6 +19,5 @@
     "ADMIN_EMAIL": "@admin_email",
     "ADMIN_PASSWORD": "@admin_password",
     "ADMIN_NAME": "@admin_name"
-  },
-  "comment": "⚠️ Note: Vercel serverless functions have limitations. For better performance, consider Railway.app or Render.com for traditional Node.js deployment."
+  }
 }
