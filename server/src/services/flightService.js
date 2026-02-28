@@ -43,15 +43,22 @@ export const searchFlights = async (searchParams) => {
       traceId = '', // Optional unique ID for tracking
     } = searchParams;
 
+    // Transform searchDetails to match EaseMyTrip format
+    const flightSearchDetails = searchDetails.map(detail => ({
+      Origin: detail.origin?.toUpperCase() || '',
+      Destination: detail.destination?.toUpperCase() || '',
+      BeginDate: detail.departDate, // EaseMyTrip uses BeginDate instead of departDate
+    }));
+
     const requestPayload = {
-      Authentication: getAuthObject(),
+      Authentication: [getAuthObject()], // Must be array
       TripType: tripType,
       Adults: adults,
       Childs: children,
       Infants: infants,
       Cabin: cabin,
-      SearchDetails: searchDetails,
-      TraceId: traceId || `${Date.now()}`,
+      FlightSearchDetails: flightSearchDetails, // Correct field name
+      TraceId: traceId || `EMTB${Date.now()}`,
     };
 
     console.log('Sending Flight Search Request:', JSON.stringify(requestPayload, null, 2));
@@ -100,7 +107,7 @@ export const rePriceFlights = async (rePriceParams) => {
     } = rePriceParams;
 
     const requestPayload = {
-      Authentication: getAuthObject(),
+      Authentication: [getAuthObject()],
       JourneyId: journeyId,
       SegmentId: segmentId,
     };
@@ -150,7 +157,7 @@ export const getSeatMap = async (seatMapParams) => {
     } = seatMapParams;
 
     const requestPayload = {
-      Authentication: getAuthObject(),
+      Authentication: [getAuthObject()],
       JourneyId: journeyId,
       SegmentId: segmentId,
     };
@@ -200,7 +207,7 @@ export const getSSRAvailability = async (ssrParams) => {
     } = ssrParams;
 
     const requestPayload = {
-      Authentication: getAuthObject(),
+      Authentication: [getAuthObject()],
       JourneyId: journeyId,
       SegmentId: segmentId,
     };
