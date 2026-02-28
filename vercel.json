@@ -1,12 +1,24 @@
 {
   "version": 2,
-  "buildCommand": "cd server && npm install",
+  "buildCommand": "npm install",
   "installCommand": "npm install",
-  "framework": "express",
+  "framework": "other",
   "functions": {
-    "server/src/index.js": {
+    "api/index.js": {
       "memory": 3008,
       "maxDuration": 60
     }
-  }
+  },
+  "env": {
+    "MONGODB_URI": "@mongodb_uri",
+    "JWT_SECRET": "@jwt_secret",
+    "EASEMYTRIP_USERNAME": "@easemytrip_username",
+    "EASEMYTRIP_PASSWORD": "@easemytrip_password",
+    "EASEMYTRIP_IP": "@easemytrip_ip",
+    "CORS_ORIGIN": "@cors_origin",
+    "ADMIN_EMAIL": "@admin_email",
+    "ADMIN_PASSWORD": "@admin_password",
+    "ADMIN_NAME": "@admin_name"
+  },
+  "comment": "⚠️ Note: Vercel serverless functions have limitations. For better performance, consider Railway.app or Render.com for traditional Node.js deployment."
 }
