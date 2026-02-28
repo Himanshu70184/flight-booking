@@ -2,7 +2,7 @@
   "version": 2,
   "buildCommand": "npm install",
   "installCommand": "npm install",
-  "framework": "other",
+  "framework": "express",
   "functions": {
     "api/index.js": {
       "memory": 3008,
